@@ -5,6 +5,10 @@ from Common.fitness import evaluate_fitness
 from Common.heuristic import *
 from Common.Piece import Piece
 
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: float, increment: float):
     print(f"doing {runs} runs with alpha={alpha} and beta={beta} with {tests} different seeds.\n")
     defs = []
@@ -14,6 +18,11 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
     b_dec= []
     ab_i = []
     ab_d = []
+
+    sns.set_style('darkgrid')
+
+    best_fitness_graph = []
+
     tests_bar = tqdm.tqdm(range(tests), desc="Tests")
     for j in tests_bar:
         #print(f"test {i + 1}:\n")
@@ -141,10 +150,18 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
             sol = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic2)
             h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
 
+    plt.title("h_1 fitness evolution")
+    plt.plot(h_1)
+    plt.show()
+
+    plt.title("h_2 fitness evolition")
+    plt.plot(h_2)
+    plt.show()
+
     average_1 = sum(h_1) / len(h_1) if h_1 else 0
     print("average fitness with heuristic 1:",average_1)
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
-evaluate_heuristics(10,10,10,10)
+evaluate_heuristics(3,2,3,3)
 #evaluate_more_ants_or_iterations(tests=3, runs=6, ants=10, iterations=10)
 #evaluate_variation_alpha_beta(tests=3, runs= 6, alpha=0.3, beta=0.6, increment=0.2)
