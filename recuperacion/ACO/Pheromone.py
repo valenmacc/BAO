@@ -1,5 +1,5 @@
 from typing import Callable
-from Choice import Choice
+from Common.Choice import Choice
 from Common.fitness import evaluate_fitness
 
 #This class represents the pheromones.

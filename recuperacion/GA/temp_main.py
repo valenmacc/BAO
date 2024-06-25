@@ -1,84 +1,68 @@
-from Choice import Choice
+from Gene import Gene
+from Common.Piece import Piece
 import random
+import copy
 import inspyred
+from Common.Solution import Solution
+from Common.fitness import evaluate_fitness
 class RectanglePacking(inspyred.benchmarks.Benchmark): 
 
-    def __init__(self, space):
+    def __init__(self, space, pieces=None):
         super(RectanglePacking, self).__init__(2)
         self.space = space
         self.bounder = inspyred.ec.Bounder([0, 0], [len(space), len(space[0])])
         self.maximize = True  # Queremos maximizar la cantidad de espacio utilizado
 
-    
-    #returns a chormosome consisting on num_pieces choices 
+    #modified
+    #returns a chormosome consisting on num_pieces genes 
     # representing the order and whether the piece is placed or not
     def generator(self, random: random, args):
         num_pieces = args.get('num_pieces')
-        pieces = args.get('pieces').clone()
+        pieces = copy.deepcopy(args.get('pieces'))
+        place_prob = args.get('place_prob')
         chromosome = []
-        for i in range(num_pieces):
-            chromosome.append(Choice(piece=pieces.pop(random.randint(0, len(pieces)-1), random.random()>0.5)))
-        return chromosome
-    
-    def imprimir_espacio(space):
-        for row in space:
-            print("  ".join(map(str, row)))
-        print()
-        
+        order = [i for i in range(num_pieces)] #list of piece indexes
+        for _ in range(num_pieces):
+            #get random index and use that piece
+            index = random.choice(order)
+            index = order.pop(order.index(index))
+            chromosome.append(Gene(piece=pieces[index], place=random.random()<=place_prob))
+        return chromosome       
 
+    def custom_crossover(random, mom, dad, args):
+        return [child1, child2]
+
+    #modified
+    def solution_from_chromosome(chromosme: list, x_dim: int, y_dim: int, pieces: list, max_pieces: int):
+        solution = Solution(x_dim=x_dim, y_dim=y_dim, pieces=pieces, max_pieces=max_pieces)
+        i = 0
+        for choice in chromosme:
+            if choice.place:
+                position = solution.get_Choice(choice.piece)
+                if position.x_pos != -1: #valid
+                    solution.place_Choice(position, i)
+                    i += 1
+        return solution
+    
+    #modified
     def evaluator(self, candidates, args):
+        x_dim = args.get('x_dim')
+        y_dim = args.get('y_dim')
+        pieces = args.get('pieces')
+        max_pieces = args.get('num_pieces')
         fitness = []
         for candidate in candidates:
-            total_area = 0
-            space_copy = copy.deepcopy(self.space)  # Creamos una copia del espacio original para no modificarlo
-            for piece in candidate:
-                placed = False
-                for i in range(len(space_copy) - len(piece[0]) + 1):
-                    for j in range(len(space_copy[0]) - len(piece) + 1):
-                        if self.is_space_available(space_copy, j, i, len(piece), len(piece[0])):
-                            placed = True
-                            for x in range(len(piece[0])):
-                                for y in range(len(piece)):
-                                    space_copy[i + x][j + y] = 1
-                            total_area += len(piece) * len(piece[0])
-                            break
-                    if placed:
-                        break
-            fitness.append(total_area)
+            fitness.append(evaluate_fitness(RectanglePacking.solution_from_chromosome(candidate,x_dim,y_dim,pieces,max_pieces)))
         return fitness
-
-    def is_space_available(self, space, x, y, width, height):
-        for i in range(y, y + height):
-            for j in range(x, x + width):
-                if space[i][j] != 0:
-                    return False
-        return True
-    
-def colocar_pieza(space, pieza, x, y):
-        temp = copy.deepcopy(space)  # Deep copy the space to avoid modifying the original
-        rect_x, rect_y, rect_width, rect_height = pieza 
-        if rect_x + rect_width >= len(space) or rect_y + rect_height >= len(space[0]):
-            return False  # Return False if the piece goes out of bounds
-        for i in range(len(pieza)):
-            for j in range(len(pieza[0])):
-                # Check bounds
-                if space[x+i][y+j] == 1:
-                    return False  # Return False if there's an overlap
-                temp[x+i][y+j] = 1  # Place the piece in the temporary space
-        # Copy the modified temporary space back to the original space
-        for i in range(len(space)):
-            for j in range(len(space[0])):
-                space[i][j] = temp[i][j]
-        return True  # Return True if the piece was successfully placed
     
 ga = inspyred.ec.GA(random.Random())
-def GeneticExecution():
-    space = [[0 for column in range(Board_side)] for row in range(Board_side)]
+def GeneticExecution(pieces: list, x_dim: int, y_dim: int):
+    space = [[0 for column in range(10)] for row in range(10)]
 
     # Usar la función de envoltura personalizada en lugar de gaussian_mutation directamente
     problem = RectanglePacking(space)  # Definimos un espacio de 10x10
     ga.selector = inspyred.ec.selectors.tournament_selection
-    ga.variator = [inspyred.ec.variators.uniform_crossover] #inspyred.ec.variators.gaussian_mutation((0.0,),(1.0,),{'_ec': ga}) no funciona
+    ga.variator = [RectanglePacking.custom_crossover]
     ga.replacer = inspyred.ec.replacers.generational_replacement
     ga.terminator = inspyred.ec.terminators.generation_termination
 
@@ -88,8 +72,24 @@ def GeneticExecution():
                         pop_size=10,
                         maximize=problem.maximize,
                         bounder=problem.bounder,
-                        max_generations=numberOfIterations)
+                        max_generations=10,
+                        num_pieces=len(pieces),
+                        pieces=pieces,
+                        x_dim=x_dim,
+                        y_dim=y_dim,
+                        place_prob= 0.5)
 
     # Mejor solución encontrada
     best = max(final_pop)
     return best
+num_pieces = 10
+max_size = 5
+pieces = Piece.generate_random_pieces(num_pieces, max_size)
+solGen = GeneticExecution(pieces=pieces, x_dim=10, y_dim=10)
+print('Best Solution: {0}:'.format(str(solGen.candidate)))
+print("Fitness",solGen.fitness)
+
+ga.selector = inspyred.ec.selectors.uniform_selection
+solGen = GeneticExecution()
+print('Best Solution: {0}:'.format(str(solGen.candidate)))
+print("Fitness",solGen.fitness)

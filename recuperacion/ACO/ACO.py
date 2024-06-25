@@ -2,7 +2,7 @@ import tqdm
 from typing import Callable
 from Common.fitness import evaluate_fitness
 from Pheromone import Pheromone
-from Solution import Solution
+from Common.Solution import Solution
 from Common.Piece import Piece
 
 

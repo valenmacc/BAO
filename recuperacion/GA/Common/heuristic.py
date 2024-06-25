@@ -1,4 +1,4 @@
-from Choice import Choice
+from recuperacion.GA.Gene import Choice
 
 #This heuristic returns the relative size of a piece, favouring larger pieces.
 def heuristic1(choice: Choice, x_dim: int, y_dim: int, board=None) -> float:
