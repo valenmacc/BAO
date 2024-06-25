@@ -1,5 +1,9 @@
 # BAO_recuperacion
 
+The Common folder contains modules that are equal in both the ACO and the GA implementation.
+They are copied into both implementations due to problems with relative imports in Python.
+
+
 TODO:
 * ~~arreglar que solo coloque una pieza.~~
 

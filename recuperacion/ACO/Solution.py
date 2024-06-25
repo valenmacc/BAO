@@ -1,5 +1,5 @@
-from  Common.Piece import Piece
-from  Common.Choice import Choice
+from Common.Piece import Piece
+from Choice import Choice
 from Pheromone import Pheromone
 import random
 from typing import Callable
