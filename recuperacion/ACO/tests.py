@@ -138,18 +138,25 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
 def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     h_1 = []
     h_2 = []
+    h_1_phero = []
+    h_2_phero = []
+
     tests_bar = tqdm.tqdm(range(tests), desc="Tests")
     for i in tests_bar:
         random.seed(i)
         pieces = Piece.generate_random_pieces(30, 10)
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+            h_1_phero.append(sol_phero)
 
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic2)
+            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic2)
             h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+            h_2_phero.append(sol_phero)
 
+
+    #Fitness evolution graphs ploting
     plt.title("h_1 fitness evolution")
     plt.plot(h_1)
     plt.show()
@@ -158,10 +165,17 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     plt.plot(h_2)
     plt.show()
 
+    #Pheromone placed value heatmap
+    #cuanto mas azul mas probable que se coloque y cada columna es una pieza, cada fila un ciclo de actualizacion
+    ax = sns.heatmap(h_1_phero, cmap='Blues', xticklabels=100, yticklabels=100)
+    plt.show()
+    ax = sns.heatmap(h_2_phero, cmap='Blues', xticklabels=100, yticklabels=100)
+    plt.show()
+
     average_1 = sum(h_1) / len(h_1) if h_1 else 0
     print("average fitness with heuristic 1:",average_1)
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
-evaluate_heuristics(3,2,3,3)
+evaluate_heuristics(1,2,2,2)
 #evaluate_more_ants_or_iterations(tests=3, runs=6, ants=10, iterations=10)
 #evaluate_variation_alpha_beta(tests=3, runs= 6, alpha=0.3, beta=0.6, increment=0.2)
