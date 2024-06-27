@@ -62,3 +62,9 @@ class Pheromone:
                     New_Pheromones[tempPieza].placed = Pheromone.clampOf100(New_Pheromones[tempPieza].placed - (tempFit * 0.6))
 
         return New_Pheromones
+
+    def get_placed(Pheromones):
+        temp = []
+        for phero in Pheromones:
+            temp.append(phero.placed)
+        return temp

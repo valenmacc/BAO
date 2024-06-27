@@ -9,6 +9,7 @@ from Common.Piece import Piece
 def ACO(n_ants: int, iterations: int, alpha: float, beta: float, max_pieces: int, pieces: list, x_dim: int, y_dim: int, heuristic: Callable):
     
     pheromones = Pheromone.initialize_pheromones(max_pieces)
+    pheromone_evolution = []
     
     #fitness_average = 0
     best_fitness = 0
@@ -37,8 +38,9 @@ def ACO(n_ants: int, iterations: int, alpha: float, beta: float, max_pieces: int
 
         #30% del tiempo
         pheromones = Pheromone.update_pheromones(pheromones, Solution_list, max_pieces, pieces)
+        pheromone_evolution += Pheromone.get_placed(pheromones)
         
         i = i + 1 
     progress_bar.close()
 
-    return best_solution
+    return best_solution, pheromone_evolution
