@@ -1,7 +1,6 @@
 from Gene import Gene
 from Common.Piece import Piece
 import random
-import copy
 import inspyred
 from Common.Solution import Solution
 from Common.fitness import evaluate_fitness
@@ -18,7 +17,7 @@ class RectanglePacking(inspyred.benchmarks.Benchmark):
     # representing the order and whether the piece is placed or not
     def generator(self, random: random, args):
         num_pieces = args.get('num_pieces')
-        pieces = copy.deepcopy(args.get('pieces'))
+        pieces = args.get('pieces')
         place_prob = args.get('place_prob')
         chromosome = []
         order = [i for i in range(num_pieces)] #list of piece indexes
@@ -29,8 +28,25 @@ class RectanglePacking(inspyred.benchmarks.Benchmark):
             chromosome.append(Gene(piece=pieces[index], place=random.random()<=place_prob))
         return chromosome       
 
-    def custom_crossover(random, mom, dad, args):
-        return [child1, child2]
+    def custom_crossover(random, candidates, args):
+        #the crossover should preserve the decision of picking a piece if its the same in both parents
+        # the rest is just a "normal" permutation crossover.
+        offspring = []
+        # Assuming two parents for each crossover
+            #!!this isn't it
+        for i in range(0, len(candidates), 2):
+            mom = candidates[i]
+            dad = candidates[i+1]
+
+            # Example crossover logic: single-point crossover
+            crossover_point = random.randint(1, len(mom) - 1)
+
+            child1 = mom[:crossover_point] + dad[crossover_point:]
+            child2 = dad[:crossover_point] + mom[crossover_point:]
+
+            offspring.append(child1)
+            offspring.append(child2)
+        return offspring
 
     #modified
     def solution_from_chromosome(chromosme: list, x_dim: int, y_dim: int, pieces: list, max_pieces: int):
@@ -52,7 +68,7 @@ class RectanglePacking(inspyred.benchmarks.Benchmark):
         max_pieces = args.get('num_pieces')
         fitness = []
         for candidate in candidates:
-            fitness.append(evaluate_fitness(RectanglePacking.solution_from_chromosome(candidate,x_dim,y_dim,pieces,max_pieces)))
+            fitness.append(evaluate_fitness(RectanglePacking.solution_from_chromosome(candidate, x_dim, y_dim, pieces, max_pieces).board, x_dim, y_dim))
         return fitness
     
 ga = inspyred.ec.GA(random.Random())
@@ -71,6 +87,7 @@ def GeneticExecution(pieces: list, x_dim: int, y_dim: int):
                         evaluator=problem.evaluator,
                         pop_size=10,
                         maximize=problem.maximize,
+                        num_elites= 2,
                         bounder=problem.bounder,
                         max_generations=10,
                         num_pieces=len(pieces),
