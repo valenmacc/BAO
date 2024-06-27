@@ -4,6 +4,7 @@ import random
 from Common.fitness import evaluate_fitness
 from Common.heuristic import *
 from Common.Piece import Piece
+import graphs
 
 import numpy as np
 import seaborn as sns
@@ -157,20 +158,13 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
 
 
     #Fitness evolution graphs ploting
-    plt.title("h_1 fitness evolution")
-    plt.plot(h_1)
-    plt.show()
-
-    plt.title("h_2 fitness evolition")
-    plt.plot(h_2)
-    plt.show()
+    graphs.fitness_Evolution_Graph(h_1)
+    graphs.fitness_Evolution_Graph(h_2)
 
     #Pheromone placed value heatmap
     #cuanto mas azul mas probable que se coloque y cada columna es una pieza, cada fila un ciclo de actualizacion
-    ax = sns.heatmap(h_1_phero, cmap='Blues', xticklabels=100, yticklabels=100)
-    plt.show()
-    ax = sns.heatmap(h_2_phero, cmap='Blues', xticklabels=100, yticklabels=100)
-    plt.show()
+    graphs.pheromone_Evolution_Graph(h_1_phero)
+    graphs.pheromone_Evolution_Graph(h_2_phero)
 
     average_1 = sum(h_1) / len(h_1) if h_1 else 0
     print("average fitness with heuristic 1:",average_1)
