@@ -34,6 +34,7 @@ class Solution:
             for y in range(self.y_dim):
                 posible = Choice(piece, x, y)
                 if self.does_Choice_fit(posible):
+                                        
                     return Choice(piece, x, y)
         return Choice(piece, -1, -1)
 
@@ -84,7 +85,7 @@ class Solution:
                 x_pos = choice.x_pos + x
                 y_pos = choice.y_pos + y
                 self.board[x_pos][y_pos] = True
-                
+        
         self.used_pieces[self.pieces.index(choice.piece)] = True
         self.pieces_order[self.pieces.index(choice.piece)] = order
         self.pieces_pos[self.pieces.index(choice.piece)] = [[choice.x_pos,choice.y_pos],[choice.x_pos + choice.piece.x_dim-1,choice.y_pos + choice.piece.y_dim-1]]
