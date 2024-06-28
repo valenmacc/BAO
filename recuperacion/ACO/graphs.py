@@ -13,5 +13,5 @@ def fitness_Evolution_Graph(fitnessList):
 
 def pheromone_Evolution_Graph(pheroList):
     ax = sns.heatmap(pheroList, cmap='Blues', xticklabels=100, yticklabels=100)
-    ax.set(title='Pheromones evolution' ,xlabel='Piece \n More blue indicates more probabilities for that piece to be picked', ylabel='Executions')
+    ax.set(title='Pheromones evolution')
     plt.show()

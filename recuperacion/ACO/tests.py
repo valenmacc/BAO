@@ -33,7 +33,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print("default")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -42,7 +42,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"increase of {increment} in alpha")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha+increment, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha+increment, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -51,7 +51,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"decrease of {-increment} in alpha")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha-increment, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha-increment, beta=beta, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -60,7 +60,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"increase of {increment} in beta")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta+increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta+increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -69,7 +69,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"decrease of {-increment} in beta")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta-increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha, beta=beta-increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -78,7 +78,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"increase of {increment} in both")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha+increment, beta=beta+increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha+increment, beta=beta+increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -87,7 +87,7 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
         #print(f"decrease of {increment} in both")
         fitnesses = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=10, iterations=10, alpha=alpha-increment, beta=beta-increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol,h = ACO(n_ants=10, iterations=10, alpha=alpha-increment, beta=beta-increment, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         #print("average fitness of the solution:",average)
@@ -113,27 +113,39 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
         
         print("default")
         fitnesses = []
+        phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+            phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
+        graphs.fitness_Evolution_Graph(fitnesses)
+        graphs.pheromone_Evolution_Graph(phero_history)
         
         print("double ants")
         fitnesses = []
+        phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=ants*2, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero = ACO(n_ants=ants*2, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+            phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
+        graphs.fitness_Evolution_Graph(fitnesses)
+        graphs.pheromone_Evolution_Graph(phero_history)
 
         print("double iterations")
         fitnesses = []
+        phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol = ACO(n_ants=ants, iterations=iterations*2, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero = ACO(n_ants=ants, iterations=iterations*2, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+            phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
+        graphs.fitness_Evolution_Graph(fitnesses)
+        graphs.pheromone_Evolution_Graph(phero_history)
 
 
 def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
@@ -170,6 +182,6 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     print("average fitness with heuristic 1:",average_1)
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
-evaluate_heuristics(1,2,2,2)
-#evaluate_more_ants_or_iterations(tests=3, runs=6, ants=10, iterations=10)
-#evaluate_variation_alpha_beta(tests=3, runs= 6, alpha=0.3, beta=0.6, increment=0.2)
+#evaluate_heuristics(1,2,2,2)
+#evaluate_more_ants_or_iterations(tests=1, runs=2, ants=2, iterations=2, heuristic=heuristic1)
+evaluate_variation_alpha_beta(tests=1, runs= 2, alpha=0.3, beta=0.6, increment=0.2)
