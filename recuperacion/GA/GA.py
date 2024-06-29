@@ -46,8 +46,16 @@ class Problem:
                     i += 1
         return solution
 
-    def selector(self, candidates: list, fitnesses: list) -> list:
-        return []
+    def selector(self, candidates: list, fitnesses: list, tournament_size=4) -> list:
+        selected_candidates = []
+        for _ in range(len(candidates)):
+            # Randomly select tournament_size individuals for the tournament
+            indices = random.sample(range(len(candidates)), tournament_size)
+            tournament_candidates = [candidates[i] for i in indices]
+            tournament_fitnesses = [fitnesses[i] for i in indices]
+            best_index = tournament_fitnesses.index(max(tournament_fitnesses))
+            selected_candidates.append(tournament_candidates[best_index])
+        return selected_candidates
     
     def recombinator(self, progenitors: list) -> list:
         return []
@@ -55,8 +63,14 @@ class Problem:
     def mutator(self, candidates: list) -> list:
         return []
     
-    def replacer(self, mu: list, lamda: list) -> list:
-        return []
+    def replacer(self, mu: list, lambda_: list) -> list:
+        pool = mu + lambda_
+        fitnesses = self.evaluator()
+        sorted_indices = sorted(range(len(pool)), key=lambda i: fitnesses[i], reverse=True)
+        selected_indices = sorted_indices[:mu]
+        new_generation = [pool[i] for i in selected_indices]
+        new_fitnesses = [fitnesses[i] for i in selected_indices]
+        return new_generation, new_fitnesses
     
     def evaluator(self, candidates):
         fitness = []
@@ -67,13 +81,13 @@ class Problem:
     def run(self, max_generations: int):
         population = self.initialization()
         best = None
+        fitnesses = self.evaluator(population)
         for _ in range(max_generations):
-            fitnesses = self.evaluator(population)
             best = population[fitnesses.index(max(fitnesses))]
             progenitors = self.selector(population, fitnesses)
             children = self.recombinator(progenitors)
             children = self.mutator(children)
-            population = self.replacer(progenitors, children)
+            population, fitnesses = self.replacer(progenitors, children)
         return best
             
             
