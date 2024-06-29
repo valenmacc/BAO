@@ -58,16 +58,16 @@ class Problem:
         return selected_candidates
     
     def recombinator(self, progenitors: list) -> list:
-        return []
+        return progenitors
     
     def mutator(self, candidates: list) -> list:
-        return []
+        return candidates
     
     def replacer(self, mu: list, lambda_: list) -> list:
         pool = mu + lambda_
-        fitnesses = self.evaluator()
+        fitnesses = self.evaluator(pool)
         sorted_indices = sorted(range(len(pool)), key=lambda i: fitnesses[i], reverse=True)
-        selected_indices = sorted_indices[:mu]
+        selected_indices = sorted_indices[:len(mu)]
         new_generation = [pool[i] for i in selected_indices]
         new_fitnesses = [fitnesses[i] for i in selected_indices]
         return new_generation, new_fitnesses
@@ -80,15 +80,17 @@ class Problem:
 
     def run(self, max_generations: int):
         population = self.initialization()
-        best = None
+        max_fitness = 0
         fitnesses = self.evaluator(population)
         for _ in range(max_generations):
-            best = population[fitnesses.index(max(fitnesses))]
+            possible_best_fitness =  max(fitnesses)
+            if possible_best_fitness > max_fitness:
+                best =  population[fitnesses.index(possible_best_fitness)]
             progenitors = self.selector(population, fitnesses)
             children = self.recombinator(progenitors)
             children = self.mutator(children)
             population, fitnesses = self.replacer(progenitors, children)
-        return best
+        return self.decoder(best)
             
             
-Problem(10, 10, Piece.generate_random_pieces(20, 5), 5, 0.5).run(3)  
+Problem(20, 20, Piece.generate_random_pieces(20, 5), 5, 0.5).run(3).printSol()
