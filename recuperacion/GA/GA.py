@@ -1,5 +1,6 @@
 from Gene import Gene
 from Common.Solution import Solution
+from Common.Piece import Piece
 import random
 from Common.fitness import evaluate_fitness
 class Problem:
@@ -33,7 +34,7 @@ class Problem:
 
         return population
         
-    def solution_from_chromosome(self, chromosme: list):
+    def decoder(self, chromosme: list) -> Solution:
         solution = Solution(x_dim=self.x_dim, y_dim=self.y_dim, pieces=self.pieces, max_pieces=self.num_pieces)
         i = 0
         for gene in chromosme:
@@ -45,16 +46,35 @@ class Problem:
                     i += 1
         return solution
 
-
+    def selector(self, candidates: list, fitnesses: list) -> list:
+        return []
+    
+    def recombinator(self, progenitors: list) -> list:
+        return []
+    
+    def mutator(self, candidates: list) -> list:
+        return []
+    
+    def replacer(self, mu: list, lamda: list) -> list:
+        return []
+    
     def evaluator(self, candidates):
         fitness = []
         for candidate in candidates:
-            fitness.append(evaluate_fitness(self.solution_from_chromosome(candidate).board, self.x_dim, self.y_dim))
+            fitness.append(evaluate_fitness(self.decoder(candidate).board, self.x_dim, self.y_dim))
         return fitness
 
-    def run(self, pieces: list, max_generations: int, population_size: int, place_prob: float):
-        population = self.initialization(pieces=pieces, population_size=population_size, place_probability=place_prob)
+    def run(self, max_generations: int):
+        population = self.initialization()
+        best = None
         for _ in range(max_generations):
             fitnesses = self.evaluator(population)
+            best = population[fitnesses.index(max(fitnesses))]
+            progenitors = self.selector(population, fitnesses)
+            children = self.recombinator(progenitors)
+            children = self.mutator(children)
+            population = self.replacer(progenitors, children)
+        return best
             
             
+Problem(10, 10, Piece.generate_random_pieces(20, 5), 5, 0.5).run(3)  
