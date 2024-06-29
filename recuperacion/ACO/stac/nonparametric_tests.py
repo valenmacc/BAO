@@ -131,7 +131,7 @@ def friedman_aligned_ranks_test(*args):
 
     aligned_observations = []
     for i in range(n):
-        loc = sp.mean([col[i] for col in args])
+        loc = sp.stats.tmean([col[i] for col in args])
         aligned_observations.extend([col[i] - loc for col in args])
         
     aligned_observations_sort = sorted(aligned_observations)
@@ -144,12 +144,12 @@ def friedman_aligned_ranks_test(*args):
             row.append(aligned_observations_sort.index(v) + 1 + (aligned_observations_sort.count(v)-1)/2.)
         aligned_ranks.append(row)
 
-    rankings_avg = [sp.mean([case[j] for case in aligned_ranks]) for j in range(k)]
-    rankings_cmp = [r/sp.sqrt(k*(n*k+1)/6.) for r in rankings_avg]
+    rankings_avg = [sp.stats.tmean([case[j] for case in aligned_ranks]) for j in range(k)]
+    rankings_cmp = [r/np.sqrt(k*(n*k+1)/6.) for r in rankings_avg]
 
     r_i = [np.sum(case) for case in aligned_ranks]
     r_j = [np.sum([case[j] for case in aligned_ranks]) for j in range(k)]
-    T = (k-1) * (sp.sum(v**2 for v in r_j) - (k*n**2/4.) * (k*n+1)**2) / float(((k*n*(k*n+1)*(2*k*n+1))/6.) - (1./float(k))*sp.sum(v**2 for v in r_i))
+    T = (k-1) * (np.sum(v**2 for v in r_j) - (k*n**2/4.) * (k*n+1)**2) / float(((k*n*(k*n+1)*(2*k*n+1))/6.) - (1./float(k))*np.sum(v**2 for v in r_i))
 
     p_value = 1 - st.chi2.cdf(T, k-1)
 
@@ -616,7 +616,7 @@ def _S(k):
     else:
         result = set()
         for j in reversed(range(1, k+1)):
-            tmp = S(k - j)
+            tmp = _S(k - j)
             for s in tmp:
                 result = result.union({sp.special.binom(j, 2) + s})
         return list(result)
@@ -650,13 +650,17 @@ def shaffer_multitest(ranks):
     k = len(ranks)
     values = ranks.values()
     keys = ranks.keys()
+    print()
     versus = list(it.combinations(range(k), 2))
     
     m = int(k*(k-1)/2.)
-    A = _S(int((1 + sp.sqrt(1+4*m*2))/2))
+    A = _S(int((1 + np.sqrt(1+4*m*2))/2))
     t = [max([a for a in A if a <= m-i]) for i in range(m)]
 
-    comparisons = [keys[vs[0]] + " vs " + keys[vs[1]] for vs in versus]
+    for vs in versus:
+        print(vs)
+        print(vs[0])
+        comparisons = [keys[vs[0]] + ' vs ' + keys[vs[1]]]
     z_values = [abs(values[vs[0]] - values[vs[1]]) for vs in versus]
     p_values = [2*(1-st.norm.cdf(abs(z))) for z in z_values]
     # Sort values by p_value so that p_0 < p_1
