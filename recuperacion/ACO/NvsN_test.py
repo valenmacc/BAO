@@ -18,26 +18,27 @@ h_1 = []
 h_2 = []
 h_3 = []
 h_4 = []
-#names = ["h_1", "h_2", "h_3", "h_4"]
-names = ["a", "b", "c", "d"]
+names = ["h_1", "h_2", "h_3", "h_4"]
+#names = ["a", "b", "c", "d"]
 names_pos = dict(zip(names, range(len(names))))
 
-""" for i in range(0,2):#seria hasta 32 para el test bien
-    sol,_= ACO(n_ants=3,iterations=3,alpha=0.3,beta=0.6,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
-    h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-    sol,_ = ACO(n_ants=3,iterations=3,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
-    h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-    sol,_ = ACO(n_ants=3,iterations=3,alpha=0.3,beta=0.6,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic2)
-    h_3.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-    sol,_ = ACO(n_ants=3,iterations=3,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic2)
-    h_4.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim)) """
+for i in range(0,2):#seria hasta 32 para el test bien
+  sol,_= ACO(n_ants=3,iterations=3,alpha=0.3,beta=0.6,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
+  h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+  sol,_ = ACO(n_ants=3,iterations=3,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
+  h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+  sol,_ = ACO(n_ants=3,iterations=3,alpha=1,beta=0,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic2)
+  h_3.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
+  sol,_ = ACO(n_ants=3,iterations=3,alpha=0,beta=1,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
+  h_4.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
 
-a = np.random.power(1, 31)
+""" a = np.random.power(1, 31)
 b = np.random.power(1, 31)
 c = np.random.power(2, 31)
-d = np.random.power(3, 31)
+d = np.random.power(3, 31) """
 
-_, p_value, rankings, pivots = friedman_aligned_ranks_test(a, b, c, d)
+#_, p_value, rankings, pivots = friedman_aligned_ranks_test(a, b, c, d)
+_, p_value, rankings, pivots = friedman_aligned_ranks_test(h_1, h_2, h_3, h_4)
 
 if p_value < alpha:
   d = dict(zip(names, pivots))

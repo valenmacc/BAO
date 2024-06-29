@@ -648,9 +648,10 @@ def shaffer_multitest(ranks):
         J. Li, A two-step rejection procedure for testing multiple hypotheses, Journal of Statistical Planning and Inference 138 (2008) 1521–1527.
     """
     k = len(ranks)
-    values = ranks.values()
-    keys = ranks.keys()
-    print()
+    #values = ranks.values()
+    values = list(ranks.values())
+    #keys = ranks.keys()
+    keys = list(ranks.keys())
     versus = list(it.combinations(range(k), 2))
     
     m = int(k*(k-1)/2.)
@@ -658,8 +659,6 @@ def shaffer_multitest(ranks):
     t = [max([a for a in A if a <= m-i]) for i in range(m)]
 
     for vs in versus:
-        print(vs)
-        print(vs[0])
         comparisons = [keys[vs[0]] + ' vs ' + keys[vs[1]]]
     z_values = [abs(values[vs[0]] - values[vs[1]]) for vs in versus]
     p_values = [2*(1-st.norm.cdf(abs(z))) for z in z_values]
