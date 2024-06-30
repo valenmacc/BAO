@@ -108,9 +108,11 @@ class Problem:
                 max_fitness = possible_best_fitness
             progenitors = self.selector(population, fitnesses)
             children = self.recombinator(progenitors, order_crossover)
-            children = self.mutator(children, bit_flip_and_swap_mutation)
+            children = self.mutator(children, bit_flip_and_scramble_mutation)
+            assert(progenitors != children)
             population, fitnesses = self.replacer(progenitors, children)
+            
         return self.decoder(best)
             
             
-Problem(20, 20, Piece.generate_random_pieces(20, 5), 200, 0.5, 0.2, 0.3).run(300).printSol()
+Problem(20, 20, Piece.generate_random_pieces(100, 5), 200, 0.3, 0.7, 0.2).run(100).printSol()

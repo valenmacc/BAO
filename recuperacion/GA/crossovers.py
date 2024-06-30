@@ -25,6 +25,7 @@ def order_crossover(parent1, parent2):
             
     return child1, child2
 
+#!broken
 def pmx_crossover(parent1, parent2):
     assert len(parent1) == len(parent2)
     
