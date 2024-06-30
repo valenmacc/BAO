@@ -20,14 +20,14 @@ class Solution:
 
 
     #! this is broken.
-    def __get_candidates(self) -> list:
-        Candidates = []
-        for candidate in self.pieces:
-            if not self.does_use_piece(candidate):
-                choice = self.get_Choice(candidate)
-                if choice.x_pos != -1:
-                    Candidates.append(choice)       
-        return Candidates
+#    def __get_candidates(self) -> list:
+#        Candidates = []
+#        for candidate in self.pieces:
+#            if not self.does_use_piece(candidate):
+#                choice = self.get_Choice(candidate)
+#                if choice.x_pos != -1:
+#                    Candidates.append(choice)       
+#        return Candidates
     
     def get_Choice (self, piece: Piece) -> Choice:
         for x in range(self.x_dim):  # Recorre todas las posiciones del espacio
@@ -39,20 +39,12 @@ class Solution:
         return Choice(piece, -1, -1)
 
     
-    
-    
-    #todo seed all random values.
-    
-    
-    
-    
-    
-    def __random_choice(Candidates, Probabilities):
-        for i in range(len(Candidates)):
-            if random.random() < Probabilities[i]: #good option for experimenting an using other choosing algos
-                return Candidates[i]
-        return Candidates[random.randint(0, len(Candidates)-1)] #program keep hanging while selectign a candidate.
-            
+#    def __random_choice(Candidates, Probabilities):
+#        for i in range(len(Candidates)):
+#            if random.random() < Probabilities[i]: #good option for experimenting an using other choosing algos
+#                return Candidates[i]
+#        return Candidates[random.randint(0, len(Candidates)-1)] #program keep hanging while selectign a candidate.
+#            
 #    
 #    def construct_solution(Pheromones: list, x_dim: int, y_dim: int, pieces: list, max_pieces: int, alpha: float, beta: float, heuristic: Callable[[Choice], float]):
 #        solution = Solution(x_dim, y_dim, pieces, max_pieces)
