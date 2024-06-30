@@ -2,15 +2,20 @@ from Gene import Gene
 from Common.Solution import Solution
 from Common.Piece import Piece
 import random
+import tqdm
+from mutations import *
+from crossovers import *
 from Common.fitness import evaluate_fitness
 class Problem:
-    def __init__(self, x_dim: int, y_dim: int, pieces: list,population_size: int, place_probability: float):
+    def __init__(self, x_dim: int, y_dim: int, pieces: list,population_size: int, place_probability: float, bit_flip_prob: float, alter_prob: float):
         self.x_dim = x_dim
         self.y_dim = y_dim
         self.pieces = pieces
         self.num_pieces = len(pieces)
         self.population_size = population_size
         self.place_prob = place_probability
+        self.bit_flip_prob = bit_flip_prob  
+        self.alter_prob = alter_prob
         
     def generator(self):
         chromosome = []
@@ -57,10 +62,23 @@ class Problem:
             selected_candidates.append(tournament_candidates[best_index])
         return selected_candidates
     
-    def recombinator(self, progenitors: list) -> list:
-        return progenitors
+     
+    def recombinator(self, progenitors: list, crossover) -> list:
+        offspring = []
+        for i in range(0, len(progenitors), 2):
+            mom = progenitors[i]
+            dad = progenitors[i + 1] if i + 1 < len(progenitors) else progenitors[0]  # Handle odd number of parents
+            child1, child2 = crossover(mom, dad)
+            offspring.append(child1)
+            offspring.append(child2)
+        return offspring
     
-    def mutator(self, candidates: list) -> list:
+
+
+
+    def mutator(self, candidates: list, mutation) -> list:
+        for chromosome in candidates:
+            mutation(chromosome, self.bit_flip_prob, self.alter_prob)
         return candidates
     
     def replacer(self, mu: list, lambda_: list) -> list:
@@ -82,15 +100,17 @@ class Problem:
         population = self.initialization()
         max_fitness = 0
         fitnesses = self.evaluator(population)
-        for _ in range(max_generations):
+        generation_bar = tqdm.tqdm(range(max_generations), desc="generations")
+        for _ in generation_bar:
             possible_best_fitness =  max(fitnesses)
             if possible_best_fitness > max_fitness:
                 best =  population[fitnesses.index(possible_best_fitness)]
+                max_fitness = possible_best_fitness
             progenitors = self.selector(population, fitnesses)
-            children = self.recombinator(progenitors)
-            children = self.mutator(children)
+            children = self.recombinator(progenitors, order_crossover)
+            children = self.mutator(children, bit_flip_and_swap_mutation)
             population, fitnesses = self.replacer(progenitors, children)
         return self.decoder(best)
             
             
-Problem(20, 20, Piece.generate_random_pieces(20, 5), 5, 0.5).run(3).printSol()
+Problem(20, 20, Piece.generate_random_pieces(20, 5), 200, 0.5, 0.2, 0.3).run(300).printSol()
