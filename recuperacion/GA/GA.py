@@ -106,6 +106,7 @@ class Problem:
             if possible_best_fitness > max_fitness:
                 best =  population[fitnesses.index(possible_best_fitness)]
                 max_fitness = possible_best_fitness
+            if max_fitness == 1.0: break
             progenitors = self.selector(population, fitnesses)
             children = self.recombinator(progenitors, order_crossover)
             children = self.mutator(children, bit_flip_and_scramble_mutation)
@@ -115,4 +116,4 @@ class Problem:
         return self.decoder(best)
             
             
-Problem(20, 20, Piece.generate_random_pieces(100, 5), 200, 0.3, 0.7, 0.2).run(100).printSol()
+Problem(25, 25, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(100).printSol()
