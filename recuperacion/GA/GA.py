@@ -116,4 +116,4 @@ class Problem:
         return self.decoder(best)
             
             
-Problem(25, 25, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(100).printSol()
+Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(100).printSol()

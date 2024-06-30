@@ -183,5 +183,5 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
 #evaluate_heuristics(1,2,2,2)
-#evaluate_more_ants_or_iterations(tests=1, runs=2, ants=2, iterations=2, heuristic=heuristic1)
-evaluate_variation_alpha_beta(tests=1, runs= 2, alpha=0.3, beta=0.6, increment=0.2)
+#evaluate_more_ants_or_iterations(tests=3, runs=2, ants=10, iterations=20, heuristic=heuristic1)
+#evaluate_variation_alpha_beta(tests=1, runs= 2, alpha=0.3, beta=0.6, increment=0.2)
