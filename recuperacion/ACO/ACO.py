@@ -27,7 +27,7 @@ def ACO(n_ants: int, iterations: int, alpha: float, beta: float, max_pieces: int
                 best_fitness = fitness
         fitness_evolution.append(best_fitness)
         pheromones = Pheromone.update_pheromones(pheromones, Solution_list, max_pieces, pieces)
-        pheromone_evolution += Pheromone.get_placed(pheromones)
+        pheromone_evolution.append(Pheromone.get_placed(pheromones))
         
         i = i + 1 
     progress_bar.close()
