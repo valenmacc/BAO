@@ -1,5 +1,7 @@
 from ACO.Common.Piece import Piece
 from ACO.Common.fitness import evaluate_fitness
+from . import *
+from GA import *
 #from ACO.ACO import ACO
 #import ACO.Common
 #import GA
@@ -30,7 +32,7 @@ GA_h_4 = []
 names = ["ACO_h_1", "ACO_h_2", "ACO_h_3", "ACO_h_4", "GA_h_1", "GA_h_2", "GA_h_3", "GA_h_4"]
 names_pos = dict(zip(names, range(len(names))))
 
-for i in range(0,2):#seria hasta 32 para el test bien
+for i in range(0,32):
   sol,_= ACO(n_ants=3,iterations=3,alpha=0.3,beta=0.6,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
   ACO_h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
   sol,_ = ACO(n_ants=3,iterations=3,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)

@@ -114,6 +114,27 @@ class Problem:
             population, fitnesses = self.replacer(progenitors, children)
             
         return self.decoder(best)
+    
+    def runForGraphs(self, max_generations: int):
+        fitnes_evol=[]
+        population = self.initialization()
+        max_fitness = 0
+        fitnesses = self.evaluator(population)
+        generation_bar = tqdm.tqdm(range(max_generations), desc="generations")
+        for _ in generation_bar:
+            possible_best_fitness =  max(fitnesses)
+            if possible_best_fitness > max_fitness:
+                best =  population[fitnesses.index(possible_best_fitness)]
+                max_fitness = possible_best_fitness
+            fitnes_evol.append(max_fitness)
+            if max_fitness == 1.0: break
+            progenitors = self.selector(population, fitnesses)
+            children = self.recombinator(progenitors, order_crossover)
+            children = self.mutator(children, bit_flip_and_scramble_mutation)
+            assert(progenitors != children)
+            population, fitnesses = self.replacer(progenitors, children)
+            
+        return self.decoder(best), fitnes_evol
             
             
 Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(100).printSol()
