@@ -1,14 +1,16 @@
 import ACO
+import ACO.Common
+import ACO.Common.Piece
 import GA
 from ACO.stac.nonparametric_tests import friedman_aligned_ranks_test, shaffer_multitest
 import numpy as np
 from ACO.Common import Piece
 from ACO.Common.fitness import evaluate_fitness
-import GA.temp_main
+from ACO.Common.heuristic import heuristic1,heuristic2
 
 #4 ACO and 4 GA. Each one 31 executions
 
-pieces = Piece.generate_random_pieces(30, 10)
+pieces = ACO.Common.Piece.Piece.generate_random_pieces(30, 10)
 
 def is_better(a,b):
   return a > b
@@ -38,13 +40,13 @@ for i in range(0,2):#seria hasta 32 para el test bien
   sol,_ = ACO(n_ants=3,iterations=3,alpha=0,beta=1,max_pieces=30,pieces=pieces,x_dim=20,y_dim=20,heuristic=heuristic1)
   ACO_h_4.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
 
-  sol = GA.temp_main.GeneticExecution(pieces=pieces, x_dim=20, y_dim=20)
+  sol = GA.Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(3)
   GA_h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-  sol = GA.temp_main.GeneticExecution(pieces=pieces, x_dim=20, y_dim=20)
+  sol = GA.Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(3)
   GA_h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-  sol = GA.temp_main.GeneticExecution(pieces=pieces, x_dim=20, y_dim=20)
+  sol = GA.Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(3)
   GA_h_3.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-  sol = GA.temp_main.GeneticExecution(pieces=pieces, x_dim=20, y_dim=20)
+  sol = GA.Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(3)
   GA_h_4.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
 
 _, p_value, rankings, pivots = friedman_aligned_ranks_test(ACO_h_1, ACO_h_2, ACO_h_3, ACO_h_4, GA_h_1, GA_h_2, GA_h_3, GA_h_4)
