@@ -50,7 +50,7 @@ class Pheromone:
                 j.placeOrder[i] = Pheromone.clampOf100((1 - 0.3) * j.placeOrder[i])
 
         #Pheromones affected by pheromone amount
-        #Fittnes of solution multiply by 0.7
+        #Fittnes of solution multiplied by 0.3
         for tempSol in Solution_list:
             tempFit = Pheromone.clampOf100(evaluate_fitness(tempSol.board, tempSol.x_dim, tempSol.y_dim) * 0.3)
             for tempPieza in range(max_pieces):
