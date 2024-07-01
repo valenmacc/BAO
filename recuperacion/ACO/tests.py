@@ -156,4 +156,4 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
 
 #evaluate_variation_alpha_beta(tests=4, runs= 5, alpha=0.25, beta=0.75, increment=0.05)
 #evaluate_heuristics(tests=4,runs=5,ants=10,iterations=50)
-evaluate_more_ants_or_iterations(tests=4, runs=5, ants=10, iterations=40, heuristic=heuristic1)
+evaluate_more_ants_or_iterations(tests=4, runs=3, ants=10, iterations=40, heuristic=heuristic1)
