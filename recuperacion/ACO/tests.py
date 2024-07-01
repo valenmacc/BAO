@@ -92,12 +92,14 @@ def evaluate_variation_alpha_beta(tests: int, runs: int, alpha: float, beta: flo
     
 def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iterations: int, heuristic):
     print(f"doing {runs} runs of {iterations} iterations with {ants} ants with {tests} different seeds.\n")
-    for j in range(tests):
-        print(f"test {j + 1}:\n")
+    tests_bar = tqdm.tqdm(range(tests), desc="Tests")
+    defs = []
+    dants = []
+    diter = []
+    for j in tests_bar:
         random.seed(j)
         pieces = Piece.generate_random_pieces(30, 10)
         
-        print("default")
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
@@ -105,9 +107,8 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
-        print("average fitness of the solution:",average)
+        defs.append(average)
         
-        print("double ants")
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
@@ -115,9 +116,8 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
-        print("average fitness of the solution:",average)
+        dants.append(average)
 
-        print("double iterations")
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
@@ -125,10 +125,11 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
-        print("average fitness of the solution:",average)
-
-
-
+        diter.append(average)
+    print(f"average over tests of default is:",sum(defs)/len(defs))
+    print(f"average over tests with double ants is: {sum(dants)/len(dants)}")
+    print(f"average over tests with double iterations is: {sum(diter)/len(diter)}")
+    
 def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     h_1 = []
     h_2 = []
@@ -152,9 +153,7 @@ def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
 
-#evaluate_more_ants_or_iterations(tests=3, runs=2, ants=10, iterations=20, heuristic=heuristic1)
-
-
 
 #evaluate_variation_alpha_beta(tests=4, runs= 5, alpha=0.25, beta=0.75, increment=0.05)
-evaluate_heuristics(tests=4,runs=5,ants=10,iterations=50)
+#evaluate_heuristics(tests=4,runs=5,ants=10,iterations=50)
+evaluate_more_ants_or_iterations(tests=4, runs=5, ants=10, iterations=20, heuristic=heuristic1)
