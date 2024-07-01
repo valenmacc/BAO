@@ -1,16 +1,16 @@
-import ACO
-import ACO.Common
-import ACO.Common.Piece
-import GA
-from ACO.stac.nonparametric_tests import friedman_aligned_ranks_test, shaffer_multitest
-import numpy as np
-from ACO.Common import Piece
+from ACO.Common.Piece import Piece
 from ACO.Common.fitness import evaluate_fitness
-from ACO.Common.heuristic import heuristic1,heuristic2
+#from ACO.ACO import ACO
+#import ACO.Common
+#import GA
+#from ACO.stac.nonparametric_tests import friedman_aligned_ranks_test, shaffer_multitest
+#import numpy as np
+#from ACO.Common import Piece
+#from ACO.Common.heuristic import heuristic1,heuristic2
 
 #4 ACO and 4 GA. Each one 31 executions
 
-pieces = ACO.Common.Piece.Piece.generate_random_pieces(30, 10)
+pieces = Piece.generate_random_pieces(30, 10)
 
 def is_better(a,b):
   return a > b

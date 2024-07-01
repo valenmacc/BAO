@@ -3,7 +3,6 @@ from typing import Callable
 from Common.fitness import evaluate_fitness
 from Pheromone import Pheromone
 from Common.Solution import Solution
-from Common.Piece import Piece
 
 def ACO(n_ants: int, iterations: int, alpha: float, beta: float, max_pieces: int, pieces: list, x_dim: int, y_dim: int, heuristic: Callable):
     pheromones = Pheromone.initialize_pheromones(max_pieces)
