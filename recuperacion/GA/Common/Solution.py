@@ -18,17 +18,6 @@ class Solution:
         self.pieces_order = [-1] * max_pieces
         self.pieces_pos = [[[-1,-1]]* 2 for i in range(max_pieces)]
 
-
-    #! this is broken.
-#    def __get_candidates(self) -> list:
-#        Candidates = []
-#        for candidate in self.pieces:
-#            if not self.does_use_piece(candidate):
-#                choice = self.get_Choice(candidate)
-#                if choice.x_pos != -1:
-#                    Candidates.append(choice)       
-#        return Candidates
-    
     def get_Choice (self, piece: Piece) -> Choice:
         for x in range(self.x_dim):  # Recorre todas las posiciones del espacio
             for y in range(self.y_dim):

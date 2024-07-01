@@ -118,7 +118,7 @@ class Problem:
     def runForGraphs(self, max_generations: int):
         fitnes_evol=[]
         population = self.initialization()
-        max_fitness = 0
+        max_fitness = 0.9
         fitnesses = self.evaluator(population)
         generation_bar = tqdm.tqdm(range(max_generations), desc="generations")
         for _ in generation_bar:
@@ -137,4 +137,4 @@ class Problem:
         return self.decoder(best), fitnes_evol
             
             
-Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).run(100).printSol()
+Problem(24, 24, Piece.generate_random_pieces(99, 6), 200, 0.001, 0.7, 0.3).runForGraphs(100)

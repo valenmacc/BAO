@@ -37,15 +37,6 @@ class Solution:
                     return Choice(piece, x, y)
         return Choice(piece, -1, -1)
 
-    
-    
-    
-    #todo seed all random values.
-    
-    
-    
-    
-    
     def __random_choice(Candidates, Probabilities):
         for i in range(len(Candidates)):
             if random.random() < Probabilities[i]: #good option for experimenting an using other choosing algos
