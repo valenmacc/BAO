@@ -101,73 +101,60 @@ def evaluate_more_ants_or_iterations(tests: int, runs: int, ants: int, iteration
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero, _ = ACO(n_ants=ants, iterations=iterations, alpha=0.3, beta=0.8, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
-        graphs.fitness_Evolution_Graph(fitnesses)
-        graphs.pheromone_Evolution_Graph(phero_history)
         
         print("double ants")
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol, sol_phero = ACO(n_ants=ants*2, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero, _ = ACO(n_ants=ants*2, iterations=iterations, alpha=0.3, beta=0.8, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
-        graphs.fitness_Evolution_Graph(fitnesses)
-        graphs.pheromone_Evolution_Graph(phero_history)
 
         print("double iterations")
         fitnesses = []
         phero_history = []
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol, sol_phero = ACO(n_ants=ants, iterations=iterations*2, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
+            sol, sol_phero, _ = ACO(n_ants=ants, iterations=iterations*2, alpha=0.3, beta=0.8, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic)
             fitnesses.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
             phero_history.append(sol_phero)
         average = sum(fitnesses) / len(fitnesses) if fitnesses else 0
         print("average fitness of the solution:",average)
-        graphs.fitness_Evolution_Graph(fitnesses)
-        graphs.pheromone_Evolution_Graph(phero_history)
+
 
 
 def evaluate_heuristics(tests: int, runs: int, ants: int, iterations: int):
     h_1 = []
     h_2 = []
-    h_1_phero = []
-    h_2_phero = []
+
 
     tests_bar = tqdm.tqdm(range(tests), desc="Tests")
     for i in tests_bar:
         random.seed(i)
         pieces = Piece.generate_random_pieces(30, 10)
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
+            sol, _, _ = ACO(n_ants=ants, iterations=iterations, alpha=0.3, beta=0.8, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic1)
             h_1.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-            h_1_phero.append(sol_phero)
+
 
         for _ in tqdm.tqdm(range(runs), desc="runs",leave=False):
-            sol, sol_phero = ACO(n_ants=ants, iterations=iterations, alpha=0.6, beta=0.5, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic2)
+            sol, _, _ = ACO(n_ants=ants, iterations=iterations, alpha=0.3, beta=0.8, max_pieces=30, pieces=pieces, x_dim=20, y_dim=20, heuristic=heuristic2)
             h_2.append(evaluate_fitness(sol.board, sol.x_dim, sol.y_dim))
-            h_2_phero.append(sol_phero)
-
-
-    #Fitness evolution graphs ploting
-    graphs.fitness_Evolution_Graph(h_1)
-    graphs.fitness_Evolution_Graph(h_2)
-
-    #Pheromone placed value heatmap
-    #cuanto mas azul mas probable que se coloque y cada columna es una pieza, cada fila un ciclo de actualizacion
-    graphs.pheromone_Evolution_Graph(h_1_phero)
-    graphs.pheromone_Evolution_Graph(h_2_phero)
 
     average_1 = sum(h_1) / len(h_1) if h_1 else 0
     print("average fitness with heuristic 1:",average_1)
     average_2 = sum(h_2) / len(h_2) if h_2 else 0
     print("average fitness with heuristic 2:",average_2)
-#evaluate_heuristics(1,2,2,2)
+
 #evaluate_more_ants_or_iterations(tests=3, runs=2, ants=10, iterations=20, heuristic=heuristic1)
-evaluate_variation_alpha_beta(tests=4, runs= 5, alpha=0.25, beta=0.75, increment=0.05)
+
+
+
+#evaluate_variation_alpha_beta(tests=4, runs= 5, alpha=0.25, beta=0.75, increment=0.05)
+evaluate_heuristics(tests=4,runs=5,ants=10,iterations=50)

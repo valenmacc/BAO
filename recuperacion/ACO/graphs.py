@@ -18,11 +18,11 @@ def pheromone_Evolution_Graph(pheroList):
     ax.set(title='Pheromones evolution')
     plt.show()
 
-pieces = Piece.generate_random_pieces(30, 20)
-phero_evolution = []
-
-sol, fitnes_evolution, temp_phero_evolution = ACO(n_ants=20,iterations=50,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=40,y_dim=40,heuristic=heuristic2)
-phero_evolution.append(temp_phero_evolution)
-
-fitness_Evolution_Graph(fitnes_evolution)
-pheromone_Evolution_Graph(phero_evolution)
+#pieces = Piece.generate_random_pieces(30, 20)
+#phero_evolution = []
+#
+#sol, fitnes_evolution, temp_phero_evolution = ACO(n_ants=20,iterations=50,alpha=0.6,beta=0.3,max_pieces=30,pieces=pieces,x_dim=40,y_dim=40,heuristic=heuristic2)
+#phero_evolution.append(temp_phero_evolution)
+#
+#fitness_Evolution_Graph(fitnes_evolution)
+#pheromone_Evolution_Graph(phero_evolution)
